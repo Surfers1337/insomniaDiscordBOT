@@ -192,7 +192,7 @@ async def avatar(ctx, member: discord.Member):
 
 #Purge chat command
 @client.command()
-@commands.has_guild_permissions(manage_messages=True, manage_messages=True)
+@commands.has_guild_permissions(manage_messages=True)
 async def purge(ctx, amount: int):
     await ctx.channel.purge(limit=amount + 1)
 
