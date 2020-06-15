@@ -13,8 +13,6 @@ Bot will be updated semi-regularly.
 
 Elmo for helping me fix dumb stuff lol <3
 
-Tufayl for being an awesome friend and helping me with a lot of python, also the IP script :)))
-
 Nothingness for letting me learn off his code!
 
 Shrekbot's owner for uploading his source, I used his code and also learned from his code. Thanks.

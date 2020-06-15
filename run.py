@@ -117,9 +117,9 @@ def nullFix(inp):
     if len(str(inp)) > 0:
         return str(inp)
     else:
-        return 'null' # Instead of freaking out, we make it return null. Thanks @tufayl for helping me with this.
+        return 'null' # Instead of freaking out, we make it return null.
 
-#IP command - tons of credit to @tufayl
+#ip command
 @client.command(aliases=['ip'])
 async def on_message(ctx, *, ip):
     r = requests.get('http://ip-api.com/json/{}'.format(ip))
