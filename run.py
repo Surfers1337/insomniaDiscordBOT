@@ -1,3 +1,7 @@
+# This code is not pretty nor a good way to learn!
+# You may want to search for better code to learn from!
+# This is a basic discord bot to get you set up !
+
 import discord
 import datetime
 import requests
@@ -12,12 +16,10 @@ from utils import lists
 from random import randint
 from discord.ext import commands
 
-#Defining stuff we will use later
-
-client = commands.Bot(command_prefix=';', owner_id=286983211123474432) # Sets bot's prefix for commands, owner_id is to identify and give the owner perms (Which is optional)
+client = commands.Bot(command_prefix=';', 
+                      owner_id=286983211123474432) 
 start_time = datetime.datetime.now() # Used for uptime
 
-#This will be used to show bot's uptime
 def timedelta_str(dt):
     days = dt.days
     hours, r = divmod(dt.seconds, 3600)
@@ -34,26 +36,25 @@ def timedelta_str(dt):
 
 #Bot initiation
 @client.event
-async def on_ready():
-    message = 'logged in as %s' % client.user #Initiate bot's name and tag
-    uid_message = 'user id %s' % client.user.id #Initiate's bot's ID
+async def on_ready(): # Once the bot is ready :
+    botName = 'logged in as %s' % client.user #Define the bot's username
+    botId = 'user id %s' % client.user.id #Define the bot's ID
     separator = '-' * max(len(message), len(uid_message)) # Fancy way to make seperators, to make our code pretty :))
     print(separator) # We use the seperator to keep it clean
-    print(message) # We print bot's name and tag
-    print(uid_message) # We print the bot's ID
+    print(botName) # We print bot's username
+    print(botId) # We print the bot's ID
     guild_members = len(set(client.get_all_members())) #Define server members
-    await client.change_presence(activity=discord.Game(name='.help | onyxium.club | insomnia | {} users' .format(guild_members))) # We set the custom status, which we also show server members
+    await client.change_presence(activity=discord.Game(name='.help | onyxium.club | insomnia | {} users' .format(guild_members))) # We set the custom status, which we also show server members with .format
 
     print(separator) # We use the seperator to keep it clean
     print(len(client.users)) #Prints amount of users in bot's servers (still ugly)
     print(len(client.guilds)) ##Prints amount of servers bot is in (still ugly)
     print(separator) # We use the seperator to keep it clean
 
-#On member join
 @client.event
-async def on_member_join(member):
+async def on_member_join(member):#On member join
     await member.create_dm() # Create a direct message
-    await member.dm_channel.send(f"Welcome to noor's server {member.name}! Please read the <#717434848255410266>! We hope to keep the server a safe community for everyone.") # In the dm, send this string
+    await member.dm_channel.send(f"Welcome to noor's server {member.name}! Please read the <#717434848255410266>! We hope to keep the server a safe community for everyone.") # Send this message in the DM
 
 #Ping command
 @client.command()
@@ -119,10 +120,9 @@ def nullFix(inp):
     else:
         return 'null' # Instead of freaking out, we make it return null.
 
-#ip command
 @client.command(aliases=['ip'])
-async def on_message(ctx, *, ip):
-    r = requests.get('http://ip-api.com/json/{}'.format(ip))
+async def on_message(ctx, *, ip):#ip command
+    r = requests.get('http://ip-api.com/json/{}'.format(ip)) # essentially using an api and just formatting it into something the bot can display
     info = json.loads(r.text)
 
     embed = discord.Embed(title="IP", description="search", color=0x00ff00)
@@ -130,30 +130,28 @@ async def on_message(ctx, *, ip):
         embed.add_field(name=list(info)[i], value=nullFix(list(info.values())[i]))
     await ctx.send(embed=embed)
 
-#Hug command
 @client.command()
-async def hug(ctx, member: discord.Member):
+async def hug(ctx, member: discord.Member):#Hug command
+
     if member.display_name == ctx.message.author.display_name:
         await ctx.send(f"{member.display_name} hugged themselves, they must be lonely.")
     else:
         await ctx.send(f'{ctx.message.author.display_name} hugged {member.display_name}. How sweet.')
 
-#Kick command
 @client.command()
 @commands.has_guild_permissions(kick_members=True) # instead of hardcoding roles, we will check for individual permissions
 async def kick(ctx, member: discord.Member, *, reason=None):
         await member.kick(reason=reason)
         await ctx.send(f"{member.mention} has been kicked for {reason}")
 
-#Ban command
-@client.command()
+
+@client.command() # ban command
 @commands.has_guild_permissions(ban_members=True) # instead of hardcoding roles, we will check for individual permissions
 async def ban(ctx, member: discord.Member, *, reason=None):
         await member.ban(reason=reason)
         await ctx.send(f"{member.mention} has been banned for {reason}")
 
-#Unban command
-@client.command()
+@client.command() #Unban command
 @commands.has_guild_permissions(administrator=True)
 async def unban(ctx, *, member):
     banned_users = await ctx.guild.bans()
@@ -167,9 +165,8 @@ async def unban(ctx, *, member):
             await ctx.send(f"{user.name}#{user.discriminator} has been unbanned")
             return
 
-#Roll dice command
 @client.command()
-async def roll(ctx, dice: str):
+async def roll(ctx, dice: str):#Roll dice command
     try:
         rolls, limit = map(int, dice.split('d'))
     except Exception:
@@ -190,11 +187,10 @@ async def avatar(ctx, member: discord.Member):
     show_avatar.set_image(url='{}'.format(member.avatar_url))
     await ctx.send(embed=show_avatar)
 
-#Purge chat command
-@client.command()
+@client.command()#Purge chat command
 @commands.has_guild_permissions(manage_messages=True)
 async def purge(ctx, amount: int):
-    await ctx.channel.purge(limit=amount + 1)
+    await ctx.channel.purge(limit=amount + 1) # The +1 is important so you can delete the wanted message amount but also delete the original command
 
 #Change nickname Command
 @client.command(pass_context=True) # If there's spaces in the name, it will show up the first part only. Currently a bug.
@@ -240,9 +236,8 @@ async def invite(ctx):
     await ctx.send(f"Wanna invite insomnia to your server? Go here : https://discord.com/api/oauth2/authorize?client_id=719718365874356234&permissions=8&scope=bot")
 
 #Bot Uptime command
-@client.command()
-async def uptime(ctx):
-    global start_time
+async def uptime(ctx): # Bot uptime command
+    global start_time # We defined all the date and time variables earlier
     await ctx.send("**:white_check_mark: Bot uptime : **"+timedelta_str(datetime.datetime.now() - start_time))
 
 #Emojify command (Written by Shrekbot's owners respectfully)
@@ -345,7 +340,7 @@ async def servers(ctx):
 
 #Credits to @elmo for helping me
 @client.command(aliases=['dick','peen','peensize','penissize','dicksize','cock','cocksize'])
-async def penis(ctx):
+async def penis(ctx): # cock.
     author = ctx.message.author
     PenisParts = ["8", "=", "D"]
     PEEPEE = []
@@ -357,17 +352,15 @@ async def penis(ctx):
     peen = ""
     await ctx.send(f"**{author.display_name}'s penis size :** {peen.join(PEEPEE)}")
 
-#Flip a coin
 @client.command()
-async def coin(ctx):
+async def coin(ctx): #Flip a coin
 	random.seed(10)
 	coin = ["heads", "tails"] #The choices for the coin
 	await ctx.send(":white_check_mark: The coin landed on " +random.SystemRandom().choice(coin)+ "!") #Displays the random coin
 	return
 
-#Info about bot, thanks to @nothingness
 @client.command()
-async def info(ctx):
+async def info(ctx): #Info about bot, thanks to @nothingness
     client.version = '0.7.3' # Manually Update your bots version
     pythonVersion = platform.python_version() # Defines Python version
     embed = discord.Embed(title=f'{client.user.name} Information', colour=ctx.author.colour, timestamp=ctx.message.created_at)
@@ -381,10 +374,9 @@ async def info(ctx):
 
     await ctx.send(embed=embed)
 
-#Say command
 @client.command()
 @commands.has_guild_permissions(administrator=True)
-async def say(ctx, *, message=None):
+async def say(ctx, *, message=None): #Say command
     message = message or "Please include a message for me to say."
     await ctx.message.delete()
     await ctx.send(message)
